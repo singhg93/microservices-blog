@@ -1,0 +1,8 @@
+flask
+gunicorn
+pytest
+flask_sqlalchemy
+flask_bcrypt
+jsonschema
+flask-migrate
+psycopg2-binary
