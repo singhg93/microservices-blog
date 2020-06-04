@@ -1,0 +1,40 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: devdatabase
+      POSTGRES_USER: devuser
+      POSTGRES_PASSWORD: devpassword
+    container_name: db
+    restart: always
+    networks:
+      - backend_network
+    ports:
+      - 5432:5432
+    volumes:
+      - ~/postgres/data:/var/lib/postgresql/data
+
+
+  auth:
+    build: ./auth_backend
+    container_name: auth
+    # links:
+    #   - db
+    #environment:
+    #  - PGHOST=db
+    #  - PG
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./auth_backend:/src
+    depends_on:
+      - db
+    networks:
+      - frontend_network
+      - backend_network
+
+networks:
+  frontend_network:
+  backend_network:
+
