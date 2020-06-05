@@ -13,14 +13,14 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ~/postgres/data:/var/lib/postgresql/data
+      - /home/alchemist/postgres/data:/var/lib/postgresql/data
 
 
   auth:
     build: ./auth_backend
     container_name: auth
-    # links:
-    #   - db
+    links:
+      - db
     #environment:
     #  - PGHOST=db
     #  - PG
@@ -33,6 +33,19 @@ services:
     networks:
       - frontend_network
       - backend_network
+
+  testdb:
+    image: postgres
+    environment:
+      POSTGRES_DB: testdatabase
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpassword
+    container_name: testdb
+    restart: always
+    networks:
+      - backend_network
+    ports:
+      - 5433:5432
 
 networks:
   frontend_network:
