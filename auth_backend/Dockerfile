@@ -14,6 +14,7 @@ ENV FLASK_RUN_HOST=0.0.0.0
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 ENV DATABASE_URI=postgresql://devuser:devpassword@db/devdatabase
+ENV TEST_DATABASE_URI=postgresql://testuser:testpassword@testdb/testdatabase
 
 expose 5000
 
