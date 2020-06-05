@@ -26,7 +26,7 @@ class TestingConfig(Config):
     SECRET_KEY = "test"
     JWT_SECRET = "jwt-test"
     TESTING = True
-    # SQLALCHEMY_DATABASE_URI = ""
+    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URI')
 
 class ProductionConfig(Config):
     pass

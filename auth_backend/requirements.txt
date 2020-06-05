@@ -1,8 +1,8 @@
 flask
-gunicorn
-pytest
-flask_sqlalchemy
-flask_bcrypt
-jsonschema
+flask-bcrypt
+flask-jwt-extended
 flask-migrate
+flask-sqlalchemy
+gunicorn
+jsonschema
 psycopg2-binary
