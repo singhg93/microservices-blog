@@ -9,13 +9,6 @@ import {
 
 class Navbar extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            username: "none"
-        }
-    }
-
     render() {
         return (
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -38,7 +31,7 @@ class Navbar extends Component {
                         {
                             this.props.loggedIn ?
                                 <li className="nav-item dropdown">
-                                    <button className="nav-link dropdown-toggle dropdown-btn"  id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{this.state.username}</button>
+                                    <button className="nav-link dropdown-toggle dropdown-btn"  id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{this.props.username}</button>
                                     <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                         <NavLink to="/profile" className="dropdown-item" href="#">Profile</NavLink>
                                         <div className="dropdown-divider"></div>

@@ -6,6 +6,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Blog from './components/Blog';
 import About from './components/About';
+import Register from './components/Register';
 import {
     BrowserRouter as Router,
     Switch,
@@ -21,6 +22,14 @@ class App extends Component {
         }
 
         this.logout = this.logout.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
+    }
+
+    handleLogin = (username) => {
+        this.setState({
+            loggedIn: true,
+            username: username
+        });
     }
 
     logout = (event) => {
@@ -31,9 +40,9 @@ class App extends Component {
         return (
             <div className="App">
                 <Router>
-                    <Navbar logout={this.logout}/>
-                    <Switch>
-                        <div className="container">
+                    <Navbar logout={this.logout} username={this.state.username} loggedIn={this.state.loggedIn}/>
+                    <div className="container">
+                        <Switch>
                             <Route exact path="/">
                                 <Home />
                             </Route>
@@ -43,11 +52,12 @@ class App extends Component {
                             <Route exact path="/about">
                                 <About />
                             </Route>
-                            <Route exact path="/login">
-                                <Login />
+                            <Route exact path="/login" render ={(props) => <Login {...props} handleLogin={this.handleLogin} />} />
+                            <Route exact path="/register">
+                                <Register />
                             </Route>
-                        </div>
-                    </Switch>
+                        </Switch>
+                    </div>
                     <Footer />
                 </Router>
             </div>
