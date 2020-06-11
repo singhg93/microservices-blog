@@ -77,6 +77,7 @@ class Login(MethodView):
             # set the tokens in cookies
             response = jsonify({
                 "ok": True,
+                "username": user_data['email'],
                 "message": "Login Successful",
                 "access_csrf": get_csrf_token(access_token),
                 "refresh_csrf": get_csrf_token(refresh_token)

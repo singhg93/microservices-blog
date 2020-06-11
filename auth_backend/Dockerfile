@@ -18,5 +18,5 @@ ENV TEST_DATABASE_URI=postgresql://testuser:testpassword@testdb/testdatabase
 
 expose 5000
 
-CMD ["flask", "run"]
-# CMD gunicorn -w 4 -b 0.0.0.0:5000 "app:create_app()"
+# CMD ["flask", "run"]
+CMD gunicorn -w 4 -b 0.0.0.0:5000 "app:create_app()"
