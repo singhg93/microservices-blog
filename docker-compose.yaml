@@ -47,6 +47,19 @@ services:
     ports:
       - 5433:5432
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    stdin_open: true
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/src
+    networks:
+      - frontend_network
+
 networks:
   frontend_network:
   backend_network:
