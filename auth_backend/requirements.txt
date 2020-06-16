@@ -6,3 +6,4 @@ flask-sqlalchemy
 gunicorn
 jsonschema
 psycopg2-binary
+pika

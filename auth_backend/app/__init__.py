@@ -25,7 +25,7 @@ def create_app(config_name="default"):
     from .routes import (
         GetUser, Register, Login, FreshLogin,
         RefreshToken, Logout, ValidateToken,
-        ValidateFreshToken
+        ValidateFreshToken, Resend, Verify
     )
     app.add_url_rule('/get', view_func=GetUser.as_view('hello'))
     app.add_url_rule('/register', view_func=Register.as_view('register'))
@@ -35,6 +35,8 @@ def create_app(config_name="default"):
     app.add_url_rule('/logout', view_func=Logout.as_view('logout'))
     app.add_url_rule('/validate_token', view_func=ValidateToken.as_view('validate_token'))
     app.add_url_rule('/validate_fresh_token', view_func=ValidateFreshToken.as_view('validate_fresh_token'))
+    app.add_url_rule('/resend/<user_email>', view_func=Resend.as_view('resend'))
+    app.add_url_rule('/verify/<token>', view_func=Verify.as_view('verify'))
 
 
     import tests

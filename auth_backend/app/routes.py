@@ -1,10 +1,11 @@
+import secrets
 from flask.views import MethodView
 from flask import (
     jsonify,
     request
 )
 from .schemas import validate_user
-from .models import User, db
+from .models import User, db, VerifyToken
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     jwt_refresh_token_required, create_refresh_token,
@@ -12,6 +13,8 @@ from flask_jwt_extended import (
     set_refresh_cookies, unset_jwt_cookies,
     get_csrf_token, fresh_jwt_required
 )
+
+from .utility import send_verification_email
 
 jwt = JWTManager()
 
@@ -40,6 +43,13 @@ class Register(MethodView):
             # add the user to the database
             db.session.add(new_user)
             db.session.commit()
+
+            random_token = secrets.token_urlsafe()
+            verify_token = VerifyToken(user_id=new_user.id, token=random_token)
+            db.session.add(verify_token)
+            db.session.commit()
+            send_verification_email(verify_token.token, new_user.email, new_user.id)
+
             return jsonify({'ok': True, 'message': "user created"}), 200
 
         else:
@@ -68,6 +78,9 @@ class Login(MethodView):
             # verify the user credentials
             if user is None or not user.verify_password(user_data['password']):
                 return jsonify({"ok": False, "message": "Invalid Credentials"}), 401
+
+            if not user.active:
+                return jsonify({"ok": False, "message": "Unverified Email"}), 401
 
             del user_data['password']
 
@@ -177,3 +190,29 @@ class GetUser(MethodView):
             return jsonify({'user': user[0].email}), 200
         else:
             return jsonify({'ok': False, 'messsage': 'User not found'}), 404
+
+
+class Resend(MethodView):
+
+    def get(self, user_email):
+        new_user = User.query.filter_by(email=user_email).first()
+        if not new_user:
+            return jsonify({'ok': False, 'message': 'Verification Failed'}), 401
+
+        verify_token = VerifyToken.query.filter_by(user_id=new_user.id).first()
+        if not verify_token:
+            return jsonify({'ok': False, 'message': 'Verification Failed'}), 401
+
+        send_verification_email(verify_token.token, new_user.email, new_user.id)
+        return jsonify({'ok': True, 'message': 'Email verification link sent'}), 200
+
+class Verify(MethodView):
+
+    def get(self, token):
+        verify_token = VerifyToken.query.filter_by(token=token).first()
+        user = User.query.filter_by(id=verify_token.user_id).first()
+        if not user or not verify_token or verify_token.token != token:
+            return jsonify({'ok': False, 'message': 'Link Expired'}), 400
+        user.active = True
+        db.session.commit()
+        return jsonify({'ok': True, 'message': 'Account Verified'}), 200
