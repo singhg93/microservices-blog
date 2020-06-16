@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 //import './App.css';
+import getCookieByName from './utility/getCookie.js';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './components/Home';
@@ -7,6 +8,7 @@ import Login from './components/Login';
 import Blog from './components/Blog';
 import About from './components/About';
 import Register from './components/Register';
+import Verify from './components/Verify';
 import {
     BrowserRouter as Router,
     Switch,
@@ -18,11 +20,40 @@ class App extends Component {
         super(props);
         this.state = {
             loggedIn: false,
-            username: "Nil"
+            username: ""
         }
 
         this.logout = this.logout.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
+    }
+
+    componentDidMount() {
+        const csrf_access_token = getCookieByName('csrf_access_token');
+        fetch ('/validate_token', {
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': csrf_access_token
+            }
+        })
+            .then(res => {
+                if (res.status === 200) {
+                    res.json()
+                        .then(data => {
+
+                            this.setState({
+                                loggedIn: data.ok,
+                                username: data.logged_in_as
+                            })
+                        });
+                } else {
+
+                    this.setState({ loggedIn: false, username: "" });
+                }
+            })
+            .catch (err => {
+                console.error(err);
+                this.setState({ loggedIn: false, username: "" });
+            });
     }
 
     handleLogin = (username) => {
@@ -34,8 +65,27 @@ class App extends Component {
 
     logout = (event) => {
         event.preventDefault();
-        console.log("I am clicked");
+        fetch("/logout", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res=> {
+                if (res.status === 200) {
+                    this.setState({
+                        loggedIn: false,
+                        username: ""
+                    });
+                } else {
+                    console.log("Logout Error");
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
     }
+
     render() {
         return (
             <div className="App">
@@ -52,10 +102,9 @@ class App extends Component {
                             <Route exact path="/about">
                                 <About />
                             </Route>
-                            <Route exact path="/login" render ={(props) => <Login {...props} handleLogin={this.handleLogin} />} />
-                            <Route exact path="/register">
-                                <Register />
-                            </Route>
+                            <Route exact path="/login" render ={(props) => <Login {...props} loggedIn={this.state.loggedIn} handleLogin={this.handleLogin} />} />
+                            <Route exact path="/register" render ={(props) => <Register {...props} /> }/>
+                            <Route exact path="/success" render= { (props) => <Verify {...props} />} />
                         </Switch>
                     </div>
                     <Footer />

@@ -70,16 +70,26 @@ class Register extends Component {
                 if (res.status === 200) {
                     res.json()
                         .then(data => {
-                            console.log(data);
+                            this.props.history.push({
+                                pathname:"/success",
+                                state: {
+                                    email: this.state.email
+                                }
+                            });
                         })
                         .catch(error => {
                             console.log(error);
+                        });
+                } else {
+                    res.json()
+                        .then(data => {
+                            console.log(data);
                         });
                 }
             })
 
             .catch( error =>  {
-
+                console.log(error);
             });
 
     }

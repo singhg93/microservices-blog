@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {
     NavLink
 } from "react-router-dom";
+import getCookieByName from '../utility/getCookie.js';
 
 class Login extends Component {
 
@@ -15,6 +16,28 @@ class Login extends Component {
 
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+    }
+
+    componentDidMount() {
+        const csrf_access_token = getCookieByName('csrf_access_token');
+        fetch ('/validate_token', {
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': csrf_access_token
+            }
+        })
+            .then(res => {
+                if (res.status === 200) {
+                    res.json()
+                        .then(data => {
+
+                            this.props.history.push('/');
+                        });
+                }
+            })
+            .catch (err => {
+                console.error(err);
+            });
     }
 
     onSubmit = (event) => {
@@ -57,9 +80,18 @@ class Login extends Component {
                 } else {
                     res.json()
                         .then ( data => {
-                            this.setState({
-                                error: data.message
-                            })
+                            if (data.message === "Unverified Email") {
+                                this.props.history.push({
+                                    pathname: "/success",
+                                    state: {
+                                        email: this.state.email
+                                    }
+                                });
+                            } else {
+                                this.setState({
+                                    error: data.message
+                                })
+                            }
                         })
                         .catch (error => {
                             this.setState({
@@ -115,7 +147,7 @@ class Login extends Component {
                                     className="form-control"
                                 />
                                 <span className="text-danger">{this.state.error}</span>
-                                <NavLink to="/recover" exact className="form-text text-right">Forgot password?</NavLink>
+                                {/*<NavLink to="/recover" exact className="form-text text-right">Forgot password?</NavLink>*/}
                             </div>
                             <div className="form-row justify-content-center">
                                 <input
