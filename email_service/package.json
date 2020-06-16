@@ -1,0 +1,16 @@
+{
+  "name": "email_service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "singhg93",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.5.6",
+    "nodemailer": "^6.4.8",
+    "nodemon": "*"
+  }
+}

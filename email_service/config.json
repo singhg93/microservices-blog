@@ -1,0 +1,6 @@
+{
+    "sparkapikey": "your spark api key",
+    "sparkuser": "your spark user",
+    "sparkport": 587,
+    "sparkhost": "smtp.sparkpostmail.com"
+}
