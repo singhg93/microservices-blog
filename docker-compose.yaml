@@ -10,8 +10,8 @@ services:
     restart: always
     networks:
       - backend_network
-    ports:
-      - 5432:5432
+        # ports:
+        #   - 5432:5432
     volumes:
       - /home/alchemist/postgres/data:/var/lib/postgresql/data
 
@@ -20,14 +20,27 @@ services:
     container_name: auth
     links:
       - db
-    ports:
-      - 5000:5000
+        # ports:
+        #   - 5000:5000
     volumes:
       - ./auth_backend:/src
     depends_on:
       - db
     networks:
-      - frontend_network
+      # - frontend_network
+      - backend_network
+
+  article:
+    build:
+      context: ./article
+      dockerfile: Dockerfile
+    container_name: article
+    depends_on:
+      - article_db
+    volumes:
+      - ./article:/src
+    networks:
+      # - frontend_network
       - backend_network
 
   frontend:
@@ -51,16 +64,11 @@ services:
     restart: always
     networks:
       - backend_network
-    expose:
-      - 5672
-      - 15672
-    ports:
-      - 8080:15672
-        #     healthcheck:
-        #       # test: ["CMD", "nc", "-z", "localhost", "5672"]
-        #       interval: 5s
-        #       timeout: 15s
-        #       retries: 1
+        # expose:
+        #   - 5672
+        #   - 15672
+        # ports:
+        #   - 8080:15672
 
   email_service:
     build:
@@ -73,6 +81,32 @@ services:
     depends_on:
       - message_queue
     networks:
+      - backend_network
+
+  article_db:
+    image: mongo
+    container_name: article_db
+    volumes:
+      - /home/alchemist/mongo/data:/data/db
+        # expose:
+        #   - 27017
+    networks:
+      - backend_network
+
+  nginx_server:
+    #build:
+    #  context: ./nginx_proxy
+    #  dockerfile: Dockerfile
+    image: nginx
+    container_name: nginx_server
+    # expose:
+    #   - 80
+    # ports:
+    #   - 80:80
+    volumes:
+      - ./nginx_proxy/nginx_proxy.conf:/etc/nginx/nginx.conf
+    networks:
+      - frontend_network
       - backend_network
 
 networks:
