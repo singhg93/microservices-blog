@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from hashlib import md5
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
@@ -24,6 +25,10 @@ class User(db.Model):
 
     def verify_password(self, password):
         return bcrypt.check_password_hash(self.password_hash, password)
+
+    def avatar(self, size):
+        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
+        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
 
 class VerifyToken(db.Model):
 

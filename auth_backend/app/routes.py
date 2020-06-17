@@ -2,7 +2,8 @@ import secrets
 from flask.views import MethodView
 from flask import (
     jsonify,
-    request
+    request,
+    redirect
 )
 from .schemas import validate_user
 from .models import User, db, VerifyToken
@@ -90,7 +91,8 @@ class Login(MethodView):
             # set the tokens in cookies
             response = jsonify({
                 "ok": True,
-                "username": user_data['email'],
+                "logged_in_as": user.email,
+                "avatar": user.avatar(128),
                 "message": "Login Successful",
                 "access_csrf": get_csrf_token(access_token),
                 "refresh_csrf": get_csrf_token(refresh_token)
@@ -174,20 +176,24 @@ class ValidateToken(MethodView):
     @jwt_required
     def get(self):
         user_data = get_jwt_identity()
-        return jsonify({"ok": True, "logged_in_as": user_data['email']}), 200
+        user = User.query.filter_by(email=user_data['email']).first()
+        avatar = user.avatar(128)
+        return jsonify({"ok": True, "avatar": avatar, "logged_in_as": user.email}), 200
 
 class ValidateFreshToken(MethodView):
 
     @fresh_jwt_required
     def get(self):
         user_data = get_jwt_identity()
-        return jsonify({"ok": True, "logged_in_as": user_data['email']}), 200
+        user = User.query.filter_by(email=user_data['email']).first()
+        avatar = user.avatar(128)
+        return jsonify({"ok": True, "avatar": avatar, "logged_in_as": user.email}), 200
 
 class GetUser(MethodView):
     def get(self):
         user = User.query.all()
         if user:
-            return jsonify({'user': user[0].email}), 200
+            return jsonify({'user': user[0].email, "avatar": user[0].avatar(128)}), 200
         else:
             return jsonify({'ok': False, 'messsage': 'User not found'}), 404
 
@@ -216,3 +222,4 @@ class Verify(MethodView):
         user.active = True
         db.session.commit()
         return jsonify({'ok': True, 'message': 'Account Verified'}), 200
+        # return redirect(location='localhost:3000/login', code=301)

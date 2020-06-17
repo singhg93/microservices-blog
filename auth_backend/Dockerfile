@@ -16,7 +16,7 @@ ENV LANG=C.UTF-8
 ENV DATABASE_URI=postgresql://devuser:devpassword@db/devdatabase
 ENV TEST_DATABASE_URI=postgresql://testuser:testpassword@testdb/testdatabase
 
-expose 5000
+# expose 5000
 
 # CMD ["flask", "run"]
 CMD gunicorn -w 4 -b 0.0.0.0:5000 "app:create_app()"
