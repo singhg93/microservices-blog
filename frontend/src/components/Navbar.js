@@ -31,9 +31,10 @@ class Navbar extends Component {
                         {
                             this.props.loggedIn ?
                                 <li className="nav-item dropdown">
-                                    <button className="nav-link dropdown-toggle dropdown-btn"  id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{this.props.username}</button>
+                                    <button className="nav-link dropdown-toggle dropdown-btn"  id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src={this.props.avatar} width="30" alt={this.props.username}/></button>
                                     <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                        <NavLink to="/profile" className="dropdown-item" href="#">Profile</NavLink>
+                                        <span className="dropdown-item logout-btn">{this.props.username}</span>
+                                        <NavLink to="/profile" className="dropdown-item" >Profile</NavLink>
                                         <div className="dropdown-divider"></div>
                                         <button className="dropdown-item logout-btn" onClick={this.props.logout}>Logout</button>
                                     </div>

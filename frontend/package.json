@@ -35,5 +35,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://auth:5000"
+  "proxy": "http://nginx_server:80"
 }

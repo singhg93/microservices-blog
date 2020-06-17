@@ -9,6 +9,9 @@ import Blog from './components/Blog';
 import About from './components/About';
 import Register from './components/Register';
 import Verify from './components/Verify';
+import Profile from './components/Profile';
+import PrivateRoute from './components/PrivateRoute';
+import { AuthContext } from './context/authContext';
 import {
     BrowserRouter as Router,
     Switch,
@@ -20,7 +23,8 @@ class App extends Component {
         super(props);
         this.state = {
             loggedIn: false,
-            username: ""
+            username: "",
+            avatar: ""
         }
 
         this.logout = this.logout.bind(this);
@@ -29,7 +33,7 @@ class App extends Component {
 
     componentDidMount() {
         const csrf_access_token = getCookieByName('csrf_access_token');
-        fetch ('/validate_token', {
+        fetch ('/auth/validate_token', {
             method: 'GET',
             headers: {
                 'X-CSRF-TOKEN': csrf_access_token
@@ -42,30 +46,32 @@ class App extends Component {
 
                             this.setState({
                                 loggedIn: data.ok,
-                                username: data.logged_in_as
+                                username: data.logged_in_as,
+                                avatar: data.avatar
                             })
                         });
                 } else {
 
-                    this.setState({ loggedIn: false, username: "" });
+                    this.setState({ loggedIn: false, username: "", avatar:"" });
                 }
             })
             .catch (err => {
                 console.error(err);
-                this.setState({ loggedIn: false, username: "" });
+                this.setState({ loggedIn: false, username: "", avatar:"" });
             });
     }
 
-    handleLogin = (username) => {
+    handleLogin = (logged_in_as, avatar) => {
         this.setState({
             loggedIn: true,
-            username: username
+            username: logged_in_as,
+            avatar: avatar
         });
     }
 
     logout = (event) => {
         event.preventDefault();
-        fetch("/logout", {
+        fetch("/auth/logout", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -75,8 +81,10 @@ class App extends Component {
                 if (res.status === 200) {
                     this.setState({
                         loggedIn: false,
-                        username: ""
+                        username: "",
+                        avatar: ""
                     });
+                    window.location.replace('/');
                 } else {
                     console.log("Logout Error");
                 }
@@ -89,26 +97,32 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <Router>
-                    <Navbar logout={this.logout} username={this.state.username} loggedIn={this.state.loggedIn}/>
-                    <div className="container">
-                        <Switch>
-                            <Route exact path="/">
-                                <Home />
-                            </Route>
-                            <Route exact path="/blog">
-                                <Blog />
-                            </Route>
-                            <Route exact path="/about">
-                                <About />
-                            </Route>
-                            <Route exact path="/login" render ={(props) => <Login {...props} loggedIn={this.state.loggedIn} handleLogin={this.handleLogin} />} />
-                            <Route exact path="/register" render ={(props) => <Register {...props} /> }/>
-                            <Route exact path="/success" render= { (props) => <Verify {...props} />} />
-                        </Switch>
-                    </div>
-                    <Footer />
-                </Router>
+                <AuthContext.Provider value={this.state}>
+                    <Router>
+                        <Navbar logout={this.logout} username={this.state.username} avatar={this.state.avatar} loggedIn={this.state.loggedIn}/>
+                        <div className="container">
+                            <Switch>
+                                <Route exact path="/">
+                                    <Home />
+                                </Route>
+                                <Route exact path="/blog">
+                                    <Blog />
+                                </Route>
+                                <Route exact path="/about">
+                                    <About />
+                                </Route>
+                                <Route exact path="/login" render ={(props) => <Login {...props} loggedIn={this.state.loggedIn} handleLogin={this.handleLogin} />} />
+                                <Route exact path="/register" render ={(props) => <Register {...props} /> }/>
+                                <Route exact path="/verify" render= { (props) => <Verify {...props} />} >
+                                    <Route path="/:email_code" render = { (props) => <Verify {...props} /> }> </Route>
+                                </Route>
+                                {/*<Route exact path="/profile" render= { (props) => <Profile {...props} avatar={this.state.avatar} />} />*/}
+                                <PrivateRoute path="/profile" component={Profile} />
+                            </Switch>
+                        </div>
+                        <Footer />
+                    </Router>
+                </AuthContext.Provider>
             </div>
         );
     }

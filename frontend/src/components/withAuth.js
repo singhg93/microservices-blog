@@ -32,9 +32,8 @@ function withAuth(ComponentToProtect) {
                 })
                 .catch (err => {
                     console.error(err);
-                    this.setState({ loading: fasle, redirect: true });
+                    this.setState({ loading: false, redirect: true });
                 });
-            )
         }
 
         render() {
@@ -44,7 +43,7 @@ function withAuth(ComponentToProtect) {
                 return null;
             }
             if (redirect) {
-                return <Redirect to "/login" />;
+                return <Redirect to="/login" />;
             }
             return <ComponentToProtect {...this.props} /> 
         }

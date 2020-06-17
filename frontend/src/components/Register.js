@@ -56,7 +56,7 @@ class Register extends Component {
             })
         }
 
-        fetch("/register", {
+        fetch("/auth/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

@@ -20,7 +20,7 @@ class Login extends Component {
 
     componentDidMount() {
         const csrf_access_token = getCookieByName('csrf_access_token');
-        fetch ('/validate_token', {
+        fetch ('/auth/validate_token', {
             method: 'GET',
             headers: {
                 'X-CSRF-TOKEN': csrf_access_token
@@ -52,7 +52,7 @@ class Login extends Component {
             });
         }
 
-        fetch("/login", {
+        fetch("/auth/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -66,7 +66,7 @@ class Login extends Component {
                 if (res.status === 200) {
                     res.json().then(data => {
                         if (data.ok) {
-                            this.props.handleLogin(data.username);
+                            this.props.handleLogin(data.logged_in_as, data.avatar);
                             this.props.history.push("/");
                         } else {
                             throw new Error('Login error');
@@ -82,7 +82,7 @@ class Login extends Component {
                         .then ( data => {
                             if (data.message === "Unverified Email") {
                                 this.props.history.push({
-                                    pathname: "/success",
+                                    pathname: "/verify",
                                     state: {
                                         email: this.state.email
                                     }

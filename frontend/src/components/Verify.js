@@ -13,9 +13,10 @@ class Verify extends Component {
         this.onClick = this.onClick.bind(this)
     }
 
+
     onClick = (event) => {
         event.preventDefault();
-        fetch("/resend/" + this.state.email, {
+        fetch("/auth/resend/" + this.state.email, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -38,6 +39,23 @@ class Verify extends Component {
     }
 
     componentDidMount() {
+        if (this.props.match.params.email_code) {
+            const code = this.props.match.params.email_code;
+            const url = '/auth/verify/' + code;
+            console.log(url);
+            fetch('/auth/verify/' + code, {
+                method: 'GET'
+            })
+                .then(res => {
+                    console.log(res);
+                    if (res.status === 200) {
+                        this.props.history.push('/login');
+                    }
+                })
+                .catch( err => {
+                    console.log(err);
+                });
+        }
         if ( !this.props.location.state ) {
             this.props.history.push('/');
         } else {
@@ -47,6 +65,7 @@ class Verify extends Component {
             });
         }
     }
+
     render() {
         return (
             <div > 
