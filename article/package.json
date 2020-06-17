@@ -1,0 +1,18 @@
+{
+  "name": "article",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "singhg93",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "lodash": "^4.17.15",
+    "mongoose": "^5.9.19",
+    "nodemon": "^2.0.4"
+  }
+}
