@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import Home from './components/Home';
 import Login from './components/Login';
 import Blog from './components/Blog';
+import Article from './components/Article';
 import About from './components/About';
 import Register from './components/Register';
 import Verify from './components/Verify';
@@ -102,15 +103,9 @@ class App extends Component {
                         <Navbar logout={this.logout} username={this.state.username} avatar={this.state.avatar} loggedIn={this.state.loggedIn}/>
                         <div className="container">
                             <Switch>
-                                <Route exact path="/">
-                                    <Home />
-                                </Route>
-                                <Route exact path="/blog">
-                                    <Blog />
-                                </Route>
-                                <Route exact path="/about">
-                                    <About />
-                                </Route>
+                                <Route exact path="/" render = {(props) => <Home {...props} />} />
+                                <Route exact path="/blog" render ={(props) => <Blog {...props}/>} />
+                                <Route exact path="/about" render={(props) => <About {...props}/>} />
                                 <Route exact path="/login" render ={(props) => <Login {...props} loggedIn={this.state.loggedIn} handleLogin={this.handleLogin} />} />
                                 <Route exact path="/register" render ={(props) => <Register {...props} /> }/>
                                 <Route exact path="/verify" render= { (props) => <Verify {...props} />} >
@@ -118,6 +113,7 @@ class App extends Component {
                                 </Route>
                                 {/*<Route exact path="/profile" render= { (props) => <Profile {...props} avatar={this.state.avatar} />} />*/}
                                 <PrivateRoute path="/profile" component={Profile} />
+                                <Route exact path="/article" render ={(props) => <Article {...props} /> }/>
                             </Switch>
                         </div>
                         <Footer />
