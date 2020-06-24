@@ -125,7 +125,7 @@ class Login extends Component {
                         <hr/>
                         <form onSubmit={this.onSubmit}>
                             <div className="form-group">
-                                <label htmlFor="email text-weight-bold">Email</label>
+                                <label htmlFor="email" className="text-weight-bold">Email</label>
                                 <input
                                     type="email"
                                     placeholder="Enter your email...."
@@ -137,7 +137,7 @@ class Login extends Component {
 
                             </div>
                             <div className="form-group">
-                                <label htmlFor="password text-weight-bold">Password</label>
+                                <label htmlFor="password" className="text-weight-bold">Password</label>
                                 <input
                                     type="password"
                                     placeholder="Enter your password...."

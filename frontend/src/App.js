@@ -7,6 +7,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Blog from './components/Blog';
 import Article from './components/Article';
+import CreateArticle from './components/CreateArticle';
 import About from './components/About';
 import Register from './components/Register';
 import Verify from './components/Verify';
@@ -114,9 +115,9 @@ class App extends Component {
                                 {/*<Route exact path="/profile" render= { (props) => <Profile {...props} avatar={this.state.avatar} />} />*/}
                                 <PrivateRoute path="/profile" component={Profile} />
                                 <Route exact path="/article" render ={(props) => <Article {...props} /> }/>
+                                <Route exact path="/create" render ={(props) => <CreateArticle {...props} /> }/>
                             </Switch>
                         </div>
-                        <Footer />
                     </Router>
                 </AuthContext.Provider>
             </div>
