@@ -8,4 +8,8 @@ const ArticleSchema = new mongoose.Schema({
     author_id: Number
 });
 
+ArticleSchema.query.byAuthor = function(authorId) {
+    return this.where({author_id: authorId});
+}
+
 module.exports = mongoose.model('Article', ArticleSchema);

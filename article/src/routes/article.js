@@ -9,13 +9,13 @@ router.route('/all')
 router.route('/:articleId')
     .get(controllers.getArticleById);
 
-router.route('/author/:authorId')
+router.route('/author/:authorId(\d+)')
     .get(controllers.getArticlesForAuthor);
 
 router.route('/update')
     .put(controllers.updateArticle);
 
-router.route('/delete/:articleId')
+router.route('/delete/:articleId(\d+)')
     .delete(controllers.deleteArticle);
 
 router.route('/create')

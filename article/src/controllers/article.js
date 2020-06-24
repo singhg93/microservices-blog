@@ -12,11 +12,27 @@ exports.getAllArticles = function(req, res) {
 }
 
 exports.getArticleById = function(req, res) {
-    res.json({message: "Getting article by id"});
+    const articleId = req.params.articleId;
+    Article.findById( articleId, function(err, article) {
+        if (err) {
+            res.json({message: "Something went wrong please try again"});
+        } else {
+            res.json(article);
+        }
+    });
 }
 
 exports.getArticlesForAuthor = function(req, res) {
-    res.json({message: "Getting all articles for author"});
+    const authorId = res.params.authorId;
+    Article.find().byAuthor(authorId).exec(function(err, articles) {
+        if (err) {
+            res.json({
+                message: "Something went wrong please try again",
+            });
+        } else {
+            res.json(articles);
+        }
+    });
 }
 
 exports.updateArticle = function(req, res) {
