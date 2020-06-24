@@ -25,6 +25,33 @@ class CreateArticle extends Component {
     
     onSubmit = (event) => {
         event.preventDefault();
+        fetch('/article/create', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                title: this.state.title,
+                description: this.state.description,
+                content: this.state.content,
+                author_id: 3
+            })
+        })
+            .then(res => {
+                console.log(res);
+                if (res.status === 200) {
+                    res.json()
+                        .then(data => {
+                            console.log(data);
+                            this.props.history.push('/blog');
+                        });
+                } else {
+                    throw new Error("REQUEST unsuccessful");
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     render() {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 //import './App.css';
 import getCookieByName from './utility/getCookie.js';
 import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+//import Footer from './components/Footer';
 import Home from './components/Home';
 import Login from './components/Login';
 import Blog from './components/Blog';
@@ -109,12 +109,12 @@ class App extends Component {
                                 <Route exact path="/about" render={(props) => <About {...props}/>} />
                                 <Route exact path="/login" render ={(props) => <Login {...props} loggedIn={this.state.loggedIn} handleLogin={this.handleLogin} />} />
                                 <Route exact path="/register" render ={(props) => <Register {...props} /> }/>
-                                <Route exact path="/verify" render= { (props) => <Verify {...props} />} >
+                                <Route path="/verify" render= { (props) => <Verify {...props} />} >
                                     <Route path="/:email_code" render = { (props) => <Verify {...props} /> }> </Route>
                                 </Route>
                                 {/*<Route exact path="/profile" render= { (props) => <Profile {...props} avatar={this.state.avatar} />} />*/}
                                 <PrivateRoute path="/profile" component={Profile} />
-                                <Route exact path="/article" render ={(props) => <Article {...props} /> }/>
+                                <Route path="/article/:articleId" render ={(props) => <Article {...props} /> } />
                                 <Route exact path="/create" render ={(props) => <CreateArticle {...props} /> }/>
                             </Switch>
                         </div>
