@@ -15,7 +15,7 @@ router.route('/author/:authorId(\d+)')
 router.route('/update')
     .put(controllers.updateArticle);
 
-router.route('/delete/:articleId(\d+)')
+router.route('/delete/:articleId')
     .delete(controllers.deleteArticle);
 
 router.route('/create')

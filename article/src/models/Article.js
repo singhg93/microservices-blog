@@ -3,8 +3,10 @@ const mongoose = require('mongoose')
 
 const ArticleSchema = new mongoose.Schema({
     title: String,
+    post_img_url: String,
     description: String,
     content: String,
+    posted_date: Date,
     author_id: Number
 });
 
