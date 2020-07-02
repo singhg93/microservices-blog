@@ -6,14 +6,21 @@ class CreateArticle extends Component {
         super(props);
         this.state = {
             title: "",
+            post_img_url: "",
             description: "",
             content: ""
         }
         this.onChange = this.onChange.bind(this);
+        this.onPreview = this.onPreview.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
     }
- 
+
+    onPreview = (event) => {
+        event.preventDefault();
+        console.log("I was clicked");
+    }
+
     onChange = (event) => {
         event.preventDefault();
         const { name, value } = event.target;
@@ -32,6 +39,7 @@ class CreateArticle extends Component {
             },
             body: JSON.stringify({
                 title: this.state.title,
+                post_img_url: this.state.post_img_url,
                 description: this.state.description,
                 content: this.state.content,
                 author_id: 3
@@ -70,8 +78,17 @@ class CreateArticle extends Component {
                             className="form-control"
                         />
                     </div>
-
-                    <hr/>
+                    <div className="form-group">
+                        <label htmlFor="post_img_url" className="text-weight-bold">Image Url</label>
+                        <input
+                            type="text"
+                            placeholder="Link to the image url...."
+                            name="post_img_url"
+                            value={this.state.post_img_url}
+                            onChange={this.onChange}
+                            className="form-control"
+                        />
+                    </div>
                     <div className="form-group">
                         <label htmlFor="description" className="text-weight-bold">Description</label>
                         <textarea
