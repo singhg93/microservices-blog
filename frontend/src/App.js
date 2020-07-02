@@ -13,6 +13,7 @@ import Register from './components/Register';
 import Verify from './components/Verify';
 import Profile from './components/Profile';
 import PrivateRoute from './components/PrivateRoute';
+import NotFound from './components/NotFound';
 import { AuthContext } from './context/authContext';
 import {
     BrowserRouter as Router,
@@ -116,6 +117,7 @@ class App extends Component {
                                 <PrivateRoute path="/profile" component={Profile} />
                                 <Route path="/article/:articleId" render ={(props) => <Article {...props} /> } />
                                 <Route exact path="/create" render ={(props) => <CreateArticle {...props} /> }/>
+                                <Route exact path="/404" render ={(props) => <NotFound {...props} /> }/>
                             </Switch>
                         </div>
                     </Router>
